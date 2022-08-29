@@ -4,7 +4,7 @@ import './index.scss';
 import App from './App';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from "firebase/auth";
-
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCUjDO_QgzR_I-nkDXs-F6wNUy5RTJPAY4",
@@ -18,8 +18,8 @@ const firebaseConfig = {
 export const Context = createContext<any|null>(null);
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app)
-console.log(auth)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -28,6 +28,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <Context.Provider value={{
         auth,
+        db
     }}>
         <React.StrictMode>
             <App />

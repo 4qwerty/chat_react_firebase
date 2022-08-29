@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Route, Routes} from 'react-router-dom'
+import {Navigate, Route, Routes} from 'react-router-dom'
 import {privateRotes, publicRotes} from '../../routes/routes'
 import {useAuthState} from "react-firebase-hooks/auth";
 import {Context} from "../../index";
