@@ -1,38 +1,18 @@
-import React, {useContext} from 'react';
-import {Box, Button, Container, Grid} from "@mui/material";
-import {Context} from "../../index";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-
+import React from 'react'
+import { Box, Button, Grid } from '@mui/material'
+import LoginForm from '../form/loginForm/LoginForm'
+import ButtonSingUpGoogle from '../button/ButtonSingUpGoogle'
 
 const Login = () => {
-    const {auth} = useContext(Context)
-
-    const login = async () => {
-        const provider = new GoogleAuthProvider();
-        const {user} = await signInWithPopup(auth, provider)
-
-        console.log(user)
-    }
-
     return (
-        <Container>
-            <Grid
-                container
-                alignItems={"center"}
-                direction={"column"}
-            >
-                <Grid
-                    container
-                    alignItems={"center"}
-                    direction={"column"}
-                >
-                    <Box p={5}>
-                        <Button onClick={login} variant="contained" color="success">Sign in with google</Button>
-                    </Box>
-                </Grid>
-            </Grid>
-        </Container>
-    );
-};
+        <Grid container alignItems={'center'} direction={'column'}>
+            <Box p={5}>
+                <ButtonSingUpGoogle />
+            </Box>
 
-export default Login;
+            <LoginForm />
+        </Grid>
+    )
+}
+
+export default Login

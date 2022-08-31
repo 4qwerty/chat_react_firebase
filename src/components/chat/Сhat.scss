@@ -1,0 +1,42 @@
+.chatWindow {
+    display: flex;
+}
+
+.chatBox {
+    display: inline-block;
+    width: 100%;
+    height: 87vh;
+    background: #0e1621;
+    overflow: auto;
+}
+
+.userBox {
+    margin: 10px;
+    width: fit-content;
+    padding: 5px;
+    border-radius: 12px;
+    background: #293a54;
+    color: aliceblue;
+}
+
+.sendMessageBox {
+    position: relative;
+    background: #20293a;
+    width: 100%;
+}
+
+.submitButton {
+    left: 60px;
+}
+
+input {
+    line-height: 1.5;
+    width: 90%;
+    height: 45px;
+    font-size: 1rem;
+    background: #20293a;
+    color: white;
+    outline: none;
+    border: none;
+    padding: 0 10px;
+}
