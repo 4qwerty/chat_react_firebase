@@ -4,10 +4,12 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { addDoc, collection } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const ButtonSingUpGoogle = () => {
     const { auth, db } = useContext(Context)
     const [users] = useCollectionData(collection(db, 'users'))
+    const navigate = useNavigate()
 
     const singUpGoogle = async () => {
         const provider = new GoogleAuthProvider()
@@ -24,6 +26,8 @@ const ButtonSingUpGoogle = () => {
                 photoURL: user.photoURL,
             })
         }
+
+        navigate('/chat', { replace: true })
     }
 
     return (

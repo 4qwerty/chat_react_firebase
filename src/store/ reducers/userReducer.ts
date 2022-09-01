@@ -11,15 +11,20 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser(state, action) {
+        setUserSingUp(state, action) {
             state.email = action.payload.email
             state.displayName = action.payload.displayName
+            state.token = action.payload.token
+            state.uid = action.payload.uid
+        },
+        setUserLogin(state, action) {
+            state.email = action.payload.email
             state.token = action.payload.token
             state.uid = action.payload.uid
         },
     },
 })
 
-export const { setUser } = userSlice.actions
+export const { setUserSingUp, setUserLogin } = userSlice.actions
 
 export default userSlice.reducer

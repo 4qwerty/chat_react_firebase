@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Form from 'react-bootstrap/Form'
-
 import './LoginForm.scss'
 import { Button } from '@mui/material'
 
-const LoginForm = () => {
+interface Props {
+    handleLogin: (email: string, password: string) => Promise<void>
+}
+
+const LoginForm = ({ handleLogin }: Props) => {
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -57,7 +60,13 @@ const LoginForm = () => {
                     <div className="required">{formik.errors.password}</div>
                 )}
 
-                <Button variant="contained" color="success">
+                <Button
+                    onClick={() =>
+                        handleLogin(formik.values.email, formik.values.password)
+                    }
+                    variant="contained"
+                    color="success"
+                >
                     Submit
                 </Button>
             </Form>

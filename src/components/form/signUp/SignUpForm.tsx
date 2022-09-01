@@ -6,14 +6,14 @@ import './SignUpForm.scss'
 import { Button } from '@mui/material'
 
 interface Props {
-    handleClick: (
+    handleRegister: (
         email: string,
         password: string,
         name: string
     ) => Promise<void>
 }
 
-const SignUpForm = ({ handleClick }: Props) => {
+const SignUpForm = ({ handleRegister }: Props) => {
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -82,7 +82,7 @@ const SignUpForm = ({ handleClick }: Props) => {
 
                 <Button
                     onClick={() =>
-                        handleClick(
+                        handleRegister(
                             formik.values.email,
                             formik.values.password,
                             formik.values.name
