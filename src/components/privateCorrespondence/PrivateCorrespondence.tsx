@@ -1,29 +1,36 @@
 import React, { useContext, useState } from 'react'
-import SendIcon from '@mui/icons-material/Send'
-import './Сhat.scss'
 import { Context } from '../../index'
-import { Avatar, Button, Container, Grid } from '@mui/material'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
 import {
     addDoc,
     collection,
-    query,
+    getDocs,
     orderBy,
-    updateDoc,
-    increment,
-    doc,
+    query,
     where,
 } from 'firebase/firestore'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 import UsersList from '../usersList/UsersList'
+import { Avatar, Button, Grid } from '@mui/material'
+import SendIcon from '@mui/icons-material/Send'
+import { useLocation } from 'react-router-dom'
 
-const Chat = () => {
+interface StateModel {}
+
+const PrivateCorrespondence = () => {
+    const { state } = useLocation()
+
     const { auth, db } = useContext(Context)
     const [user]: any = useAuthState(auth)
     const [value, setValue] = useState('')
+
     const messageRef = collection(db, 'messages')
     const [messages] = useCollectionData(
-        query(messageRef, orderBy('createdAt', 'asc'))
+        query(
+            messageRef,
+            where('displayName', '==', 'Kumamon'),
+            orderBy('createdAt', 'asc')
+        )
     )
 
     const sendMessage = async () => {
@@ -33,12 +40,10 @@ const Chat = () => {
             photoURL: user.photoURL,
             text: value,
             createdAt: new Date().toLocaleString(),
+            conversation: state,
         })
-        setValue('')
 
-        await updateDoc(doc(db, 'users', '4CBNAURy9wp8Ghny6d9l'), {
-            activity: increment(1),
-        })
+        setValue('')
     }
 
     return (
@@ -83,4 +88,4 @@ const Chat = () => {
     )
 }
 
-export default Chat
+export default PrivateCorrespondence

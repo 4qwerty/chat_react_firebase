@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import { Context } from '../../index'
 import { addDoc, collection } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
+import { CHAT_ROUTER } from '../../utils/consts'
 
 const SignUp = () => {
     const dispatch = useDispatch()
@@ -34,8 +35,9 @@ const SignUp = () => {
                     uid: user.uid,
                     displayName: name,
                     photoURL: user.photoURL,
+                    activity: 0,
                 })
-                navigate('../chat', { replace: true })
+                navigate(CHAT_ROUTER, { replace: true })
             })
             .catch(console.error)
     }

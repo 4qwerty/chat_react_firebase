@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '../../index'
 import LoginForm from '../form/loginForm/LoginForm'
+import { CHAT_ROUTER } from '../../utils/consts'
 
 const Login = () => {
     const dispatch = useDispatch()
@@ -23,7 +24,7 @@ const Login = () => {
                         token: user.getIdToken(),
                     })
                 )
-                navigate('../chat', { replace: true })
+                navigate(CHAT_ROUTER, { replace: true })
             })
             .catch(console.error)
     }

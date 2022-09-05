@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { AppBar, Button, Grid, Toolbar } from '@mui/material'
 import { NavLink } from 'react-router-dom'
-import { LOGIN_ROUTER, SING_UP_ROUTER } from '../../utils/consts'
+import { LOGIN_ROUTER, SING_UP_ROUTER, CHAT_ROUTER } from '../../utils/consts'
 import { Context } from '../../index'
 import { signOut } from 'firebase/auth'
 
@@ -16,12 +16,18 @@ const Navbar = () => {
             <Toolbar variant={'dense'}>
                 <Grid>
                     {user ? (
-                        <Button
-                            onClick={() => signOut(auth)}
-                            variant="contained"
-                        >
-                            Logout
-                        </Button>
+                        <div>
+                            <Button
+                                onClick={() => signOut(auth)}
+                                variant="contained"
+                            >
+                                Logout
+                            </Button>
+
+                            <NavLink to={CHAT_ROUTER}>
+                                <Button variant="contained">Chat</Button>
+                            </NavLink>
+                        </div>
                     ) : (
                         <div>
                             <NavLink to={LOGIN_ROUTER}>

@@ -5,6 +5,7 @@ import { addDoc, collection } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { CHAT_ROUTER } from '../../utils/consts'
 
 const ButtonSingUpGoogle = () => {
     const { auth, db } = useContext(Context)
@@ -24,10 +25,11 @@ const ButtonSingUpGoogle = () => {
                 uid: user.uid,
                 displayName: user.displayName,
                 photoURL: user.photoURL,
+                activity: 0,
             })
         }
 
-        navigate('/chat', { replace: true })
+        navigate(CHAT_ROUTER, { replace: true })
     }
 
     return (
