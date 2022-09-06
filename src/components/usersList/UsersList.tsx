@@ -6,6 +6,7 @@ import {
     orderBy,
     query,
     getDocs,
+    where,
 } from 'firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Context } from '../../index'
@@ -15,13 +16,18 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { PRIVATE_CORRESPONDENCE_ROUTER } from '../../utils/consts'
 
+interface DocIdValue {
+    id: string
+    uid: [string, string]
+}
+
 const UsersList = () => {
     const { db, auth } = useContext(Context)
     const [user]: any = useAuthState(auth)
     const navigate = useNavigate()
     const usersRef = collection(db, 'users')
     const [users] = useCollectionData(
-        query(usersRef, orderBy('activity', 'desc'))
+        query(usersRef, where('uid', '!=', user.uid))
     )
 
     const conversation: any = []
@@ -38,18 +44,19 @@ const UsersList = () => {
     getConversation()
 
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
-        const docId = conversation?.filter((e: any) => {
+        const docId: DocIdValue[] = conversation?.filter((e: DocIdValue) => {
             return e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
         })
 
-        if (!docId) {
+        if (docId.length === 0) {
+            console.log(docId)
             await addDoc(collection(db, 'conversation'), {
                 uid: [user.uid, interlocutor.uid],
             })
         }
 
         navigate(PRIVATE_CORRESPONDENCE_ROUTER, {
-            state: docId[0].id,
+            state: { docId: docId[0].id, uidInterlocutor: interlocutor.uid },
         })
     }
 

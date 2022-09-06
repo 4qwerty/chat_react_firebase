@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { Context } from '../../index'
+import './PrivateCorrespondence.scss'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { addDoc, collection, where, query } from 'firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
@@ -9,15 +10,19 @@ import SendIcon from '@mui/icons-material/Send'
 import { useLocation } from 'react-router-dom'
 
 const PrivateCorrespondence = () => {
-    const { state } = useLocation()
+    const { state }: any = useLocation()
     const { auth, db } = useContext(Context)
     const [user] = useAuthState(auth)
     const [value, setValue] = useState('')
+    const interlocutorRef = collection(db, 'users')
+    const [interlocutor] = useCollectionData(
+        query(interlocutorRef, where('uid', '==', state.uidInterlocutor))
+    )
+    const member = interlocutor?.[0]
     const messageRef = collection(db, 'messages')
     const [mess] = useCollectionData(
-        query(messageRef, where('conversation', '==', state))
+        query(messageRef, where('conversation', '==', state.docId))
     )
-
     const messages = useMemo(() => {
         return mess?.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
     }, [mess])
@@ -45,10 +50,15 @@ const PrivateCorrespondence = () => {
 
     return (
         <div>
-            <div className={'chatWindow'}>
+            <div className={'informationMember'}>
+                <Avatar src={member?.photoURL} />
+                <div>{member?.displayName}</div>
+            </div>
+
+            <div className={'privateCorrespondenceWindow'}>
                 <UsersList />
 
-                <div className={'chatBox'}>
+                <div className={'privateCorrespondenceBox'}>
                     {messages?.map((message) => (
                         <div
                             key={message.createdAt}

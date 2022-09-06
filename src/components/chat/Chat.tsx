@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import './Сhat.scss'
 import { Context } from '../../index'
