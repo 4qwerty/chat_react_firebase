@@ -6,7 +6,6 @@ import {
     orderBy,
     query,
     getDocs,
-    where,
 } from 'firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Context } from '../../index'
@@ -25,7 +24,7 @@ const UsersList = () => {
         query(usersRef, orderBy('activity', 'desc'))
     )
 
-    let conversation: any = []
+    const conversation: any = []
 
     const getConversation = async () => {
         const q = query(collection(db, 'conversation'))
@@ -39,22 +38,17 @@ const UsersList = () => {
     getConversation()
 
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
-        let check = conversation?.some((e: any) => {
+        const docId = conversation?.filter((e: any) => {
             return e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
         })
 
-        if (!check) {
+        if (!docId) {
             await addDoc(collection(db, 'conversation'), {
                 uid: [user.uid, interlocutor.uid],
             })
         }
 
-        let docId = conversation?.filter((e: any) => {
-            return e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
-        })
-
         navigate(PRIVATE_CORRESPONDENCE_ROUTER, {
-            replace: true,
             state: docId[0].id,
         })
     }

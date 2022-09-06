@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import './Сhat.scss'
 import { Context } from '../../index'
-import { Avatar, Button, Container, Grid } from '@mui/material'
+import { Avatar, Button, Grid } from '@mui/material'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import {
@@ -13,32 +13,60 @@ import {
     updateDoc,
     increment,
     doc,
-    where,
+    getDocs,
 } from 'firebase/firestore'
 import UsersList from '../usersList/UsersList'
 
 const Chat = () => {
     const { auth, db } = useContext(Context)
-    const [user]: any = useAuthState(auth)
+    const [user] = useAuthState(auth)
     const [value, setValue] = useState('')
+    const users: any = []
     const messageRef = collection(db, 'messages')
-    const [messages] = useCollectionData(
+    const [mess] = useCollectionData(
         query(messageRef, orderBy('createdAt', 'asc'))
     )
 
+    const messages = useMemo(() => {
+        return mess?.filter((e) => !e.conversation)
+    }, [mess])
+
+    const getUsers = async () => {
+        const q = query(collection(db, 'users'))
+        const querySnapshot = await getDocs(q)
+
+        querySnapshot.forEach((doc) => {
+            users.push({ id: doc.id, ...doc.data() })
+        })
+    }
+
+    getUsers()
+
     const sendMessage = async () => {
+        const userId = users?.filter((e: any) => {
+            return e.uid === user?.uid
+        })
+
         await addDoc(collection(db, 'messages'), {
-            uid: user.uid,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
+            uid: user?.uid,
+            displayName: user?.displayName,
+            photoURL: user?.photoURL,
             text: value,
             createdAt: new Date().toLocaleString(),
         })
         setValue('')
 
-        await updateDoc(doc(db, 'users', '4CBNAURy9wp8Ghny6d9l'), {
+        await updateDoc(doc(db, 'users', userId[0].id), {
             activity: increment(1),
         })
+    }
+
+    const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+        if (event.key === 'Enter' || event.key === 'NumEnter') {
+            event.preventDefault()
+            event.stopPropagation()
+            sendMessage()
+        }
     }
 
     return (
@@ -53,7 +81,7 @@ const Chat = () => {
                             className={'userBox'}
                             style={{
                                 marginLeft:
-                                    user.uid === message.uid ? 'auto' : '10px',
+                                    user?.uid === message.uid ? 'auto' : '10px',
                             }}
                         >
                             <Grid container>
@@ -69,10 +97,12 @@ const Chat = () => {
             <div className={'sendMessageBox'}>
                 <input
                     value={value}
+                    onKeyDown={onKeyDown}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="Написати повідомлення..."
                 />
                 <Button
+                    disabled={!value}
                     onClick={sendMessage}
                     type="submit"
                     startIcon={<SendIcon />}
