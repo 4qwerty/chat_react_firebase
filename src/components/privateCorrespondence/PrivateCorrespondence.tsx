@@ -34,7 +34,7 @@ const PrivateCorrespondence = () => {
             photoURL: user?.photoURL,
             text: value,
             createdAt: new Date().toLocaleString(),
-            conversation: state,
+            conversation: state.docId,
         })
 
         setValue('')
