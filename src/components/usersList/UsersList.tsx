@@ -3,7 +3,6 @@ import {
     addDoc,
     collection,
     DocumentData,
-    orderBy,
     query,
     getDocs,
     where,
@@ -16,9 +15,9 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { PRIVATE_CORRESPONDENCE_ROUTER } from '../../utils/consts'
 
-interface DocIdValue {
+interface ConversationValue {
     id: string
-    uid: [string, string]
+    uid: string[]
 }
 
 const UsersList = () => {
@@ -29,27 +28,29 @@ const UsersList = () => {
     const [users] = useCollectionData(
         query(usersRef, where('uid', '!=', user.uid))
     )
-
-    const conversation: any = []
+    const conversation: ConversationValue[] = []
 
     const getConversation = async () => {
         const q = query(collection(db, 'conversation'))
         const querySnapshot = await getDocs(q)
 
         querySnapshot.forEach((doc) => {
-            conversation.push({ id: doc.id, ...doc.data() })
+            conversation.push({ uid: [], id: doc.id, ...doc.data() })
         })
     }
 
     getConversation()
 
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
-        const docId: DocIdValue[] = conversation?.filter((e: DocIdValue) => {
-            return e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
-        })
+        const docId: ConversationValue[] = conversation?.filter(
+            (e: ConversationValue) => {
+                return (
+                    e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
+                )
+            }
+        )
 
         if (docId.length === 0) {
-            console.log(docId)
             await addDoc(collection(db, 'conversation'), {
                 uid: [user.uid, interlocutor.uid],
             })

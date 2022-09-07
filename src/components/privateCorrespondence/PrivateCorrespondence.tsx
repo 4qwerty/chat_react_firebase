@@ -9,6 +9,11 @@ import { Avatar, Button, Grid } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { useLocation } from 'react-router-dom'
 
+interface StateValue {
+    docId: string
+    uidInterlocutor: string
+}
+
 const PrivateCorrespondence = () => {
     const { state }: any = useLocation()
     const { auth, db } = useContext(Context)

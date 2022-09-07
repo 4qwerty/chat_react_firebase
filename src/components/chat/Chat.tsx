@@ -17,11 +17,19 @@ import {
 } from 'firebase/firestore'
 import UsersList from '../usersList/UsersList'
 
+interface UserValue {
+    activity: number
+    displayName: string
+    id: string
+    photoURL: string
+    uid: string
+}
+
 const Chat = () => {
     const { auth, db } = useContext(Context)
     const [user] = useAuthState(auth)
     const [value, setValue] = useState('')
-    const users: any = []
+    const users: UserValue[] = []
     const messageRef = collection(db, 'messages')
     const [mess] = useCollectionData(
         query(messageRef, orderBy('createdAt', 'asc'))
@@ -36,14 +44,21 @@ const Chat = () => {
         const querySnapshot = await getDocs(q)
 
         querySnapshot.forEach((doc) => {
-            users.push({ id: doc.id, ...doc.data() })
+            users.push({
+                activity: 0,
+                displayName: '',
+                photoURL: '',
+                uid: '',
+                id: doc.id,
+                ...doc.data(),
+            })
         })
     }
 
     getUsers()
 
     const sendMessage = async () => {
-        const userId = users?.filter((e: any) => {
+        const userId = users?.filter((e: UserValue) => {
             return e.uid === user?.uid
         })
 
