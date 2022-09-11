@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
     addDoc,
     collection,
@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Context } from '../../index'
-import { Avatar, Grid } from '@mui/material'
+import { Avatar, Box, Grid } from '@mui/material'
 import './UsersList.scss'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
@@ -39,7 +39,9 @@ const UsersList = () => {
         })
     }
 
-    getConversation()
+    useEffect(() => {
+        getConversation()
+    })
 
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
         const docId: ConversationValue[] = conversation?.filter(
@@ -54,6 +56,15 @@ const UsersList = () => {
             await addDoc(collection(db, 'conversation'), {
                 uid: [user.uid, interlocutor.uid],
             })
+
+            navigate(PRIVATE_CORRESPONDENCE_ROUTER, {
+                state: {
+                    docId: docId[0].id,
+                    uidInterlocutor: interlocutor.uid,
+                },
+            })
+
+            return
         }
 
         navigate(PRIVATE_CORRESPONDENCE_ROUTER, {
@@ -62,21 +73,23 @@ const UsersList = () => {
     }
 
     return (
-        <div className={'usersList'}>
-            <Grid container>
-                {users?.map((user) => (
-                    <Grid
-                        key={user.uid}
-                        container
-                        className={'user'}
-                        onClick={() => sendPrivateMessage(user)}
-                    >
-                        <Avatar src={user.photoURL} />
-                        <div>{user.displayName}</div>
-                    </Grid>
-                ))}
-            </Grid>
-        </div>
+        <Box className={'usersList'}>
+            {users?.map((user) => (
+                <Grid
+                    key={user.uid}
+                    container
+                    className={'user'}
+                    onClick={() => sendPrivateMessage(user)}
+                >
+                    <Avatar
+                        src={user.photoURL}
+                        className={'userAvatar'}
+                        sx={{ width: 26, height: 26 }}
+                    />
+                    <Box className={'userName'}>{user.displayName}</Box>
+                </Grid>
+            ))}
+        </Box>
     )
 }
 

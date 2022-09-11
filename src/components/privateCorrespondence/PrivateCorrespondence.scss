@@ -6,7 +6,6 @@
     display: flex;
     align-items: center;
     color: aliceblue;
-
     width: 100%;
     height: 50px;
 }
@@ -14,18 +13,9 @@
 .privateCorrespondenceBox {
     display: inline-block;
     width: 100%;
-    height: 80vh;
+    height: 78vh;
     background: #0e1621;
     overflow: auto;
-}
-
-.userBox {
-    margin: 10px;
-    width: fit-content;
-    padding: 5px;
-    border-radius: 12px;
-    background: #293a54;
-    color: aliceblue;
 }
 
 .sendMessageBox {

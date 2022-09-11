@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Form from 'react-bootstrap/Form'
 import './SignUpForm.scss'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 
 interface Props {
     handleRegister: (
@@ -30,8 +30,8 @@ const SignUpForm = ({ handleRegister }: Props) => {
                 .max(13, 'Password must be 13 numbers or less')
                 .required('Required'),
         }),
-        onSubmit: () => {
-            console.log('sucseess')
+        onSubmit: (values) => {
+            handleRegister(values.email, values.password, values.name)
         },
     })
 
@@ -49,7 +49,9 @@ const SignUpForm = ({ handleRegister }: Props) => {
                     value={formik.values.email}
                 />
                 {formik.touched.email && formik.errors.email && (
-                    <div className="required">{formik.errors.email}</div>
+                    <Typography color={'error'}>
+                        {formik.errors.email}
+                    </Typography>
                 )}
 
                 <Form.Label htmlFor="name">Name</Form.Label>
@@ -63,7 +65,9 @@ const SignUpForm = ({ handleRegister }: Props) => {
                     value={formik.values.name}
                 />
                 {formik.touched.name && formik.errors.name && (
-                    <div className="required">{formik.errors.name}</div>
+                    <Typography color={'error'}>
+                        {formik.errors.name}
+                    </Typography>
                 )}
 
                 <Form.Label htmlFor="password">Password</Form.Label>
@@ -77,20 +81,12 @@ const SignUpForm = ({ handleRegister }: Props) => {
                     value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password && (
-                    <div className="required">{formik.errors.password}</div>
+                    <Typography color={'error'}>
+                        {formik.errors.password}
+                    </Typography>
                 )}
 
-                <Button
-                    onClick={() =>
-                        handleRegister(
-                            formik.values.email,
-                            formik.values.password,
-                            formik.values.name
-                        )
-                    }
-                    variant="contained"
-                    color="success"
-                >
+                <Button type={'submit'} variant="contained" color="success">
                     Submit
                 </Button>
             </Form>

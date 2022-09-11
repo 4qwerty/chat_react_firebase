@@ -1,8 +1,8 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import './Сhat.scss'
 import { Context } from '../../index'
-import { Avatar, Button, Grid } from '@mui/material'
+import { Avatar, Box, Button, Grid } from '@mui/material'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import {
@@ -26,10 +26,11 @@ interface UserValue {
 }
 
 const Chat = () => {
+    const dummy = React.useRef() as React.MutableRefObject<HTMLInputElement>
     const { auth, db } = useContext(Context)
     const [user] = useAuthState(auth)
     const [value, setValue] = useState('')
-    const users: UserValue[] = []
+    const users: UserValue[] = [] // useState
     const messageRef = collection(db, 'messages')
     const [mess] = useCollectionData(
         query(messageRef, orderBy('createdAt', 'asc'))
@@ -45,17 +46,15 @@ const Chat = () => {
 
         querySnapshot.forEach((doc) => {
             users.push({
-                activity: 0,
-                displayName: '',
-                photoURL: '',
-                uid: '',
                 id: doc.id,
                 ...doc.data(),
-            })
+            } as UserValue)
         })
     }
 
-    getUsers()
+    useEffect(() => {
+        getUsers()
+    })
 
     const sendMessage = async () => {
         const userId = users?.filter((e: UserValue) => {
@@ -70,6 +69,7 @@ const Chat = () => {
             createdAt: new Date().toLocaleString(),
         })
         setValue('')
+        dummy.current.scrollIntoView({ behavior: 'smooth' })
 
         await updateDoc(doc(db, 'users', userId[0].id), {
             activity: increment(1),
@@ -85,46 +85,83 @@ const Chat = () => {
     }
 
     return (
-        <div>
-            <div className={'chatWindow'}>
-                <UsersList />
+        <Box sx={{ width: '100%', height: '100%' }}>
+            <Grid
+                container
+                rowSpacing={0}
+                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+                <Grid
+                    item
+                    xs={4}
+                    sm={3}
+                    md={2}
+                    sx={{
+                        fontSize: {
+                            lg: 14,
+                            sm: 12,
+                            xs: 12,
+                        },
+                    }}
+                >
+                    <UsersList />
+                </Grid>
 
-                <div className={'chatBox'}>
-                    {messages?.map((message) => (
-                        <div
-                            key={message.createdAt}
-                            className={'userBox'}
-                            style={{
-                                marginLeft:
-                                    user?.uid === message.uid ? 'auto' : '10px',
-                            }}
-                        >
-                            <Grid container>
-                                <Avatar src={message.photoURL} />
-                                <div>{message.displayName}</div>
-                            </Grid>
-                            <div>{message.text}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                <Grid item xs={8} sm={9} md={10}>
+                    <Box
+                        className={'chatBox'}
+                        sx={{
+                            fontSize: {
+                                lg: 14,
+                                sm: 12,
+                                xs: 12,
+                            },
+                        }}
+                    >
+                        {messages?.map((message) => (
+                            <Box
+                                key={message.createdAt}
+                                className={'userBox'}
+                                style={{
+                                    marginLeft:
+                                        user?.uid === message.uid
+                                            ? 'auto'
+                                            : '10px',
+                                }}
+                            >
+                                <Grid container>
+                                    <Avatar
+                                        src={message.photoURL}
+                                        sx={{ width: 24, height: 24 }}
+                                    />
+                                    <Box className={'userName'}>
+                                        {message.displayName}
+                                    </Box>
+                                </Grid>
+                                <Box>{message.text}</Box>
+                            </Box>
+                        ))}
+                        <span ref={dummy}></span>
+                    </Box>
+                </Grid>
+                <Grid item xs={4} sm={3} md={2} />
 
-            <div className={'sendMessageBox'}>
-                <input
-                    value={value}
-                    onKeyDown={onKeyDown}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder="Написати повідомлення..."
-                />
-                <Button
-                    disabled={!value}
-                    onClick={sendMessage}
-                    type="submit"
-                    startIcon={<SendIcon />}
-                    className={'submitButton'}
-                />
-            </div>
-        </div>
+                <Grid item xs={8} sm={9} md={10} className={'inputBox'}>
+                    <input
+                        value={value}
+                        onKeyDown={onKeyDown}
+                        onChange={(e) => setValue(e.target.value)}
+                        placeholder="Написати повідомлення..."
+                    />
+                    <Button
+                        disabled={!value}
+                        onClick={sendMessage}
+                        type="submit"
+                        startIcon={<SendIcon />}
+                    />
+                </Grid>
+            </Grid>
+        </Box>
     )
 }
 

@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Form from 'react-bootstrap/Form'
 import './LoginForm.scss'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 
 interface Props {
     handleLogin: (email: string, password: string) => Promise<void>
@@ -24,8 +24,8 @@ const LoginForm = ({ handleLogin }: Props) => {
                 .max(13, 'Password must be 13 numbers or less')
                 .required('Required'),
         }),
-        onSubmit: () => {
-            console.log('sucseess')
+        onSubmit: (values) => {
+            handleLogin(values.email, values.password)
         },
     })
 
@@ -43,7 +43,9 @@ const LoginForm = ({ handleLogin }: Props) => {
                     value={formik.values.email}
                 />
                 {formik.touched.email && formik.errors.email && (
-                    <div className="required">{formik.errors.email}</div>
+                    <Typography color={'error'}>
+                        {formik.errors.email}
+                    </Typography>
                 )}
 
                 <Form.Label htmlFor="password">Password</Form.Label>
@@ -57,16 +59,12 @@ const LoginForm = ({ handleLogin }: Props) => {
                     value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password && (
-                    <div className="required">{formik.errors.password}</div>
+                    <Typography color={'error'}>
+                        {formik.errors.password}
+                    </Typography>
                 )}
 
-                <Button
-                    onClick={() =>
-                        handleLogin(formik.values.email, formik.values.password)
-                    }
-                    variant="contained"
-                    color="success"
-                >
+                <Button type={'submit'} variant="contained" color="success">
                     Submit
                 </Button>
             </Form>
