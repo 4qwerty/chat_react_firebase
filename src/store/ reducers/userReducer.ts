@@ -12,15 +12,10 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUserSingUp(state, action) {
-            state.email = action.payload.email
-            state.displayName = action.payload.displayName
-            state.token = action.payload.token
-            state.uid = action.payload.uid
+            return { ...state, ...action.payload }
         },
         setUserLogin(state, action) {
-            state.email = action.payload.email
-            state.token = action.payload.token
-            state.uid = action.payload.uid
+            return { ...state, ...action.payload }
         },
     },
 })

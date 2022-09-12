@@ -1,12 +1,7 @@
 import React, { useContext } from 'react'
 import { AppBar, Button, Grid, Toolbar } from '@mui/material'
 import { NavLink, useNavigate } from 'react-router-dom'
-import {
-    LOGIN_ROUTER,
-    SING_UP_ROUTER,
-    CHAT_ROUTER,
-    PRIVATE_CORRESPONDENCE_ROUTER,
-} from '../../utils/consts'
+import { LOGIN_ROUTER, SING_UP_ROUTER, CHAT_ROUTER } from '../../utils/consts'
 import { Context } from '../../index'
 import { signOut } from 'firebase/auth'
 
@@ -17,7 +12,7 @@ const Navbar = () => {
     const { auth } = useContext(Context)
     const [user] = useAuthState(auth)
     return (
-        <AppBar position="static">
+        <AppBar position="static" style={{ background: '#2E3B55' }}>
             <Toolbar variant={'dense'}>
                 <Grid>
                     {user ? (
@@ -27,23 +22,27 @@ const Navbar = () => {
                                     signOut(auth)
                                     navigate(LOGIN_ROUTER)
                                 }}
-                                variant="contained"
+                                style={{ color: '#ffff' }}
                             >
                                 Logout
                             </Button>
 
                             <NavLink to={CHAT_ROUTER}>
-                                <Button variant="contained">Chat</Button>
+                                <Button style={{ color: '#ffff' }}>Chat</Button>
                             </NavLink>
                         </div>
                     ) : (
                         <div>
                             <NavLink to={LOGIN_ROUTER}>
-                                <Button variant="contained">Login</Button>
+                                <Button style={{ color: '#ffff' }}>
+                                    Login
+                                </Button>
                             </NavLink>
 
                             <NavLink to={SING_UP_ROUTER}>
-                                <Button variant="contained">Sing up</Button>
+                                <Button style={{ color: '#ffff' }}>
+                                    Sing up
+                                </Button>
                             </NavLink>
                         </div>
                     )}

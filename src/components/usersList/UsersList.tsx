@@ -43,27 +43,31 @@ const UsersList = () => {
         getConversation()
     })
 
+    const getDocId = (interlocutor: DocumentData) => {
+        getConversation()
+
+        return conversation?.filter((e: ConversationValue) => {
+            return e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
+        })
+    }
+
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
-        const docId: ConversationValue[] = conversation?.filter(
-            (e: ConversationValue) => {
-                return (
-                    e.uid.includes(user.uid) && e.uid.includes(interlocutor.uid)
-                )
-            }
-        )
+        const docId: ConversationValue[] = getDocId(interlocutor)
+        console.log(docId)
 
         if (docId.length === 0) {
             await addDoc(collection(db, 'conversation'), {
                 uid: [user.uid, interlocutor.uid],
             })
 
+            const doc: ConversationValue[] = getDocId(interlocutor)
+
             navigate(PRIVATE_CORRESPONDENCE_ROUTER, {
                 state: {
-                    docId: docId[0].id,
+                    docId: doc[0].id,
                     uidInterlocutor: interlocutor.uid,
                 },
             })
-
             return
         }
 

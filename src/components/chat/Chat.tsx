@@ -68,7 +68,9 @@ const Chat = () => {
             text: value,
             createdAt: new Date().toLocaleString(),
         })
+
         setValue('')
+
         dummy.current.scrollIntoView({ behavior: 'smooth' })
 
         await updateDoc(doc(db, 'users', userId[0].id), {
