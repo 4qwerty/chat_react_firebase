@@ -62,20 +62,25 @@ const PrivateCorrespondence = () => {
         }
     }
     return (
-        <Box sx={{ width: '100%', height: '100%' }}>
+        <Grid container>
             <Grid
-                container
-                rowSpacing={0}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                item
+                xs={5}
+                sm={3}
+                md={2}
+                sx={{
+                    fontSize: {
+                        lg: 14,
+                        sm: 12,
+                        xs: 12,
+                    },
+                }}
             >
-                <Grid item xs={4} sm={3} md={2}></Grid>
-                <Grid
-                    item
-                    xs={8}
-                    sm={9}
-                    md={10}
-                    className={'informationMember'}
-                >
+                <UsersList />
+            </Grid>
+
+            <Grid item xs={7} sm={9} md={10}>
+                <Grid container className={'informationMember'}>
                     <Avatar
                         className={'userAvatar'}
                         src={member?.photoURL}
@@ -84,23 +89,7 @@ const PrivateCorrespondence = () => {
                     <Box className={'userName'}>{member?.displayName}</Box>
                 </Grid>
 
-                <Grid
-                    item
-                    xs={4}
-                    sm={3}
-                    md={2}
-                    sx={{
-                        fontSize: {
-                            lg: 14,
-                            sm: 12,
-                            xs: 12,
-                        },
-                    }}
-                >
-                    <UsersList />
-                </Grid>
-
-                <Grid item xs={8} sm={9} md={10}>
+                <Grid>
                     <Box
                         className={'privateCorrespondenceBox'}
                         sx={{
@@ -137,9 +126,8 @@ const PrivateCorrespondence = () => {
                         <span ref={dummy}></span>
                     </Box>
                 </Grid>
-                <Grid item xs={4} sm={3} md={2} />
 
-                <Grid item xs={8} sm={9} md={10} className={'inputBox'}>
+                <Grid className={'inputBox'}>
                     <input
                         value={value}
                         onKeyDown={onKeyDown}
@@ -154,7 +142,101 @@ const PrivateCorrespondence = () => {
                     />
                 </Grid>
             </Grid>
-        </Box>
+        </Grid>
+
+        // <Box sx={{ width: '100%', height: '100%' }}>
+        //     <Grid
+        //         container
+        //         rowSpacing={0}
+        //         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        //     >
+        //         <Grid item xs={4} sm={3} md={2}></Grid>
+        //         <Grid
+        //             item
+        //             xs={8}
+        //             sm={9}
+        //             md={10}
+        //             className={'informationMember'}
+        //         >
+        //             <Avatar
+        //                 className={'userAvatar'}
+        //                 src={member?.photoURL}
+        //                 sx={{ width: 30, height: 30 }}
+        //             />
+        //             <Box className={'userName'}>{member?.displayName}</Box>
+        //         </Grid>
+        //
+        //         <Grid
+        //             item
+        //             xs={4}
+        //             sm={3}
+        //             md={2}
+        //             sx={{
+        //                 fontSize: {
+        //                     lg: 14,
+        //                     sm: 12,
+        //                     xs: 12,
+        //                 },
+        //             }}
+        //         >
+        //             <UsersList />
+        //         </Grid>
+        //
+        //         <Grid item xs={8} sm={9} md={10}>
+        //             <Box
+        //                 className={'privateCorrespondenceBox'}
+        //                 sx={{
+        //                     fontSize: {
+        //                         lg: 14,
+        //                         sm: 12,
+        //                         xs: 12,
+        //                     },
+        //                 }}
+        //             >
+        //                 {messages?.map((message) => (
+        //                     <Box
+        //                         key={message.createdAt}
+        //                         className={'userBox'}
+        //                         style={{
+        //                             marginLeft:
+        //                                 user?.uid === message.uid
+        //                                     ? 'auto'
+        //                                     : '10px',
+        //                         }}
+        //                     >
+        //                         <Grid container>
+        //                             <Avatar
+        //                                 src={message.photoURL}
+        //                                 sx={{ width: 24, height: 24 }}
+        //                             />
+        //                             <Box className={'userName'}>
+        //                                 {message.displayName}
+        //                             </Box>
+        //                         </Grid>
+        //                         <Box>{message.text}</Box>
+        //                     </Box>
+        //                 ))}
+        //                 <span ref={dummy}></span>
+        //             </Box>
+        //         </Grid>
+        //         <Grid item xs={4} sm={3} md={2} />
+        //
+        //         <Grid item xs={8} sm={9} md={10} className={'inputBox'}>
+        //             <input
+        //                 value={value}
+        //                 onKeyDown={onKeyDown}
+        //                 onChange={(e) => setValue(e.target.value)}
+        //                 placeholder="Написати повідомлення..."
+        //             />
+        //             <Button
+        //                 disabled={!value}
+        //                 onClick={sendMessage}
+        //                 type="submit"
+        //                 startIcon={<SendIcon />}
+        //             />
+        //         </Grid>
+        //     </Grid>
+        // </Box>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import './Сhat.scss'
 import { Context } from '../../index'
@@ -87,29 +87,25 @@ const Chat = () => {
     }
 
     return (
-        <Box sx={{ width: '100%', height: '100%' }}>
+        <Grid container>
             <Grid
-                container
-                rowSpacing={0}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                item
+                xs={5}
+                sm={3}
+                md={2}
+                sx={{
+                    fontSize: {
+                        lg: 14,
+                        sm: 12,
+                        xs: 12,
+                    },
+                }}
             >
-                <Grid
-                    item
-                    xs={4}
-                    sm={3}
-                    md={2}
-                    sx={{
-                        fontSize: {
-                            lg: 14,
-                            sm: 12,
-                            xs: 12,
-                        },
-                    }}
-                >
-                    <UsersList />
-                </Grid>
+                <UsersList />
+            </Grid>
 
-                <Grid item xs={8} sm={9} md={10}>
+            <Grid item xs={7} sm={9} md={10}>
+                <Grid>
                     <Box
                         className={'chatBox'}
                         sx={{
@@ -146,9 +142,8 @@ const Chat = () => {
                         <span ref={dummy}></span>
                     </Box>
                 </Grid>
-                <Grid item xs={4} sm={3} md={2} />
 
-                <Grid item xs={8} sm={9} md={10} className={'inputBox'}>
+                <Grid className={'inputBox'}>
                     <input
                         value={value}
                         onKeyDown={onKeyDown}
@@ -163,7 +158,7 @@ const Chat = () => {
                     />
                 </Grid>
             </Grid>
-        </Box>
+        </Grid>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
     addDoc,
     collection,
@@ -28,20 +28,23 @@ const UsersList = () => {
     const [users] = useCollectionData(
         query(usersRef, where('uid', '!=', user.uid))
     )
-    const conversation: ConversationValue[] = []
+    const [conversation, setConversation] = useState<ConversationValue[]>([])
 
     const getConversation = async () => {
         const q = query(collection(db, 'conversation'))
         const querySnapshot = await getDocs(q)
+        const array: ConversationValue[] = []
 
         querySnapshot.forEach((doc) => {
-            conversation.push({ uid: [], id: doc.id, ...doc.data() })
+            array.push({ uid: [], id: doc.id, ...doc.data() })
         })
+
+        setConversation(array)
     }
 
     useEffect(() => {
         getConversation()
-    })
+    }, [conversation])
 
     const getDocId = (interlocutor: DocumentData) => {
         getConversation()
@@ -53,7 +56,6 @@ const UsersList = () => {
 
     const sendPrivateMessage = async (interlocutor: DocumentData) => {
         const docId: ConversationValue[] = getDocId(interlocutor)
-        console.log(docId)
 
         if (docId.length === 0) {
             await addDoc(collection(db, 'conversation'), {
